@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WebSocket Example</title>
+    <script type="text/javascript">
+        let ws;
+
+        function connect() {
+            ws = new WebSocket("ws://localhost:8080/websocket");
+            ws.onopen = function() {
+                log("Connected to server");
+            };
+            ws.onmessage = function(event) {
+                log("Received: " + event.data);
+            };
+            ws.onclose = function() {
+                log("Disconnected from server");
+            };
+        }
+
+        function sendMessage() {
+            let message = document.getElementById("message").value;
+            ws.send(message);
+            log("Sent: " + message);
+        }
+
+        function log(message) {
+            let log = document.getElementById("log");
+            let p = document.createElement("p");
+            p.textContent = message;
+            log.appendChild(p);
+        }
+    </script>
+</head>
+<body onload="connect()">
+<h1>WebSocket Example</h1>
+<label for="message"></label><input type="text" id="message" placeholder="Enter message">
+<button onclick="sendMessage()">Send</button>
+<div id="log"></div>
+</body>
+</html>
