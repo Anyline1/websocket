@@ -1,16 +1,20 @@
 package ru.anyline.websocket.handler;
 
+import lombok.AllArgsConstructor;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
+import ru.anyline.websocket.service.MessageServiceImpl;
 
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
+@AllArgsConstructor
 public class WebSocketHandler extends TextWebSocketHandler {
 
+    private final MessageServiceImpl messageService;
     private static Set<WebSocketSession> sessions = Collections.synchronizedSet(new HashSet<>());
 
     @Override
@@ -22,6 +26,11 @@ public class WebSocketHandler extends TextWebSocketHandler {
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         System.out.println("Received: " + message.getPayload());
+
+        String payload = message.getPayload();
+        String roomId = "default";
+        messageService.saveMessage(roomId, payload);
+
         for (WebSocketSession webSocketSession : sessions) {
             if (webSocketSession.isOpen()) {
                 webSocketSession.sendMessage(new TextMessage(message.getPayload()));
