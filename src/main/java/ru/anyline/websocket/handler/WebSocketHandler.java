@@ -7,6 +7,7 @@ import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
+import ru.anyline.websocket.entity.Message;
 import ru.anyline.websocket.service.MessageServiceImpl;
 
 import java.io.IOException;
@@ -15,6 +16,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @AllArgsConstructor
@@ -29,6 +31,10 @@ public class WebSocketHandler extends TextWebSocketHandler {
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         sessions.add(session);
         System.out.println("New connection: " + session.getId());
+        List<Message> history = messageService.getMessageHistory("default");
+        for (Message msg : history) {
+            session.sendMessage(new TextMessage("History: " + msg.getContent()));
+        }
     }
 
     @Override
