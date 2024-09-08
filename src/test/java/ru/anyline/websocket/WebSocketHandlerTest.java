@@ -49,6 +49,6 @@ public class WebSocketHandlerTest {
 
         verify(webSocketSession, times(1)).close(any());
     }
-    
+
 }
 
