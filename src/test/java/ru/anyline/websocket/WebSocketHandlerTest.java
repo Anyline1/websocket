@@ -30,17 +30,25 @@ public class WebSocketHandlerTest {
 
     @Test
     public void testHandleTextMessage() throws Exception {
-        // Имитация отправки текстового сообщения
+
         when(webSocketSession.isOpen()).thenReturn(true);
 
         TextMessage message = new TextMessage("Hello, World!");
         webSocketHandler.handleTextMessage(webSocketSession, message);
 
-        // Проверяем, что сообщение было сохранено
         verify(messageService, times(1)).saveMessage(eq("default"), eq("Hello, World!"));
 
-        // Проверяем, что сообщение было отправлено
         verify(webSocketSession, times(1)).sendMessage(any(TextMessage.class));
     }
+
+    @Test
+    public void testHandleTransportError() throws Exception {
+        doThrow(new RuntimeException("Test Exception")).when(webSocketSession).close(any());
+
+        webSocketHandler.handleTransportError(webSocketSession, new RuntimeException("Test Exception"));
+
+        verify(webSocketSession, times(1)).close(any());
+    }
+    
 }
 
