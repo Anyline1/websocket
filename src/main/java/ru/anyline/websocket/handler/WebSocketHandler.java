@@ -38,7 +38,7 @@ public class WebSocketHandler extends TextWebSocketHandler {
     }
 
     @Override
-    protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
+    public void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         System.out.println("Received: " + message.getPayload());
 
         String payload = message.getPayload();
