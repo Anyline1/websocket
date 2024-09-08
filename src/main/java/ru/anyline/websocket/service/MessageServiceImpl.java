@@ -14,7 +14,7 @@ public class MessageServiceImpl implements MessageService{
     private final MessageRepo messageRepo;
     @Override
     public void saveMessage(String roomId, String content) {
-        
+
         Message message = new Message();
         message.setRoomId(roomId);
         message.setContent(content);

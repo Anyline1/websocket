@@ -34,5 +34,14 @@ public class WebSocketHandler extends TextWebSocketHandler {
         sessions.remove(session);
         System.out.println("Disconnected: " + session.getId());
     }
+
+    @Override
+    public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
+        System.err.println("Error in session " + session.getId() + ": " + exception.getMessage());
+        if (session.isOpen()) {
+            session.close(CloseStatus.SERVER_ERROR);
+        }
+    }
+
 }
 
